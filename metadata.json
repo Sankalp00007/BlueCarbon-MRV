@@ -1,0 +1,8 @@
+{
+  "name": "BlueCarbon Ledger",
+  "description": "A blockchain-based Blue Carbon Monitoring, Reporting, and Verification (MRV) platform for transparent coastal ecosystem restoration.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}
