@@ -1,11 +1,13 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export async function verifyRestorationImage(imageBase64: string, expectedType: 'MANGROVE' | 'SEAGRASS', lat: number, lng: number) {
+  // Initialize on each call to ensure dynamic environment variables are picked up
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
   try {
     const response = await ai.models.generateContent({
+      // Maps grounding is only supported in Gemini 2.5 series models.
       model: 'gemini-2.5-flash',
       contents: [
         {
@@ -55,7 +57,6 @@ export async function verifyRestorationImage(imageBase64: string, expectedType: 
     const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
     const mapsUrl = groundingChunks?.find(chunk => chunk.maps?.uri)?.maps?.uri;
 
-    // Enhanced parsing with safer defaults
     const confidenceMatch = text.match(/VERDICT:\s*([\d.]+)/i);
     const reasoningMatch = text.match(/REASONING:\s*([\s\S]*?)(?=FEATURES:|$)/i);
     const featuresMatch = text.match(/FEATURES:\s*([\s\S]*?)(?=CONTEXT:|$)/i);
@@ -74,7 +75,7 @@ export async function verifyRestorationImage(imageBase64: string, expectedType: 
     console.error("AI Verification failed:", error);
     return { 
       confidence: 0, 
-      reasoning: "High-latency or API error. Manual secondary audit required for registry integrity.", 
+      reasoning: "Analysis requires manual audit due to API communication limits.", 
       detectedFeatures: [], 
       environmentalContext: "Unknown",
       suggestion: "Request fresh field data or manual site visit.",
@@ -84,6 +85,8 @@ export async function verifyRestorationImage(imageBase64: string, expectedType: 
 }
 
 export async function askAuditorQuestion(imageBase64: string, question: string) {
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',

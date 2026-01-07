@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { ICONS } from '../constants';
+import { ICONS } from '../constants.tsx';
 
 interface LandingPageProps {
   onStart: () => void;
@@ -58,11 +57,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
             </button>
           </div>
         </div>
-        {/* Subtle decorative elements */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-50 to-transparent"></div>
       </section>
 
-      {/* Enhanced Mission & Growth Section */}
+      {/* Mission Section */}
       <section id="mission" className="max-w-6xl mx-auto px-4 scroll-mt-24">
         <div className="flex flex-col lg:flex-row gap-16 items-start">
           <div className="lg:w-1/2 space-y-8">
@@ -103,7 +101,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
         </div>
       </section>
 
-      {/* High-Impact Ecosystems: 10x Comparison */}
+      {/* 10x Comparison Section */}
       <section className="bg-slate-900 -mx-4 sm:-mx-6 lg:-mx-8 px-8 py-32 rounded-[5rem] text-white">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-8">
@@ -120,7 +118,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
           </div>
           
           <div className="grid lg:grid-cols-2 gap-16">
-            {/* Mangroves */}
             <div className="group bg-white/5 p-4 rounded-[3.5rem] border border-white/10 transition-all hover:bg-white/10">
               <div className="aspect-[4/3] rounded-[2.5rem] overflow-hidden mb-8">
                 <img src="https://images.unsplash.com/photo-1621451537084-482c73073a0f?auto=format&fit=crop&q=80&w=1000" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Mangroves" />
@@ -143,7 +140,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
               </div>
             </div>
 
-            {/* Seagrass */}
             <div className="group bg-white/5 p-4 rounded-[3.5rem] border border-white/10 transition-all hover:bg-white/10">
               <div className="aspect-[4/3] rounded-[2.5rem] overflow-hidden mb-8">
                 <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1000" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Seagrass" />
@@ -169,7 +165,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
         </div>
       </section>
 
-      {/* Formal 4-Step MRV Pipeline */}
+      {/* MRV Pipeline */}
       <section className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-24">
           <h2 className="text-5xl font-bold mb-6 text-slate-900">The MRV Pipeline</h2>
@@ -179,38 +175,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
         </div>
         
         <div className="grid md:grid-cols-4 gap-4 relative">
-          {/* Connecting Line (Desktop) */}
           <div className="hidden md:block absolute top-[60px] left-[10%] right-[10%] h-0.5 bg-slate-100 z-0"></div>
           
           {[
-            { 
-              step: '01', 
-              role: 'Community Member', 
-              title: 'Field Capture', 
-              desc: 'Members upload geofenced, timestamped site data. AI analyzes biometrics for species density and soil health.',
-              icon: '📸'
-            },
-            { 
-              step: '02', 
-              role: 'Scientific NGO', 
-              title: 'Verification', 
-              desc: 'Third-party auditors cross-reference field data with high-res satellite imagery to validate ecological progress.',
-              icon: '🕵️'
-            },
-            { 
-              step: '03', 
-              role: 'Registry Admin', 
-              title: 'Registry Mint', 
-              desc: 'Administrators perform a final compliance check before minting a unique, cryptographic carbon asset on the ledger.',
-              icon: '🏛️'
-            },
-            { 
-              step: '04', 
-              role: 'Corporations', 
-              title: 'Market Purchase', 
-              desc: 'Buyers purchase and "retire" credits. Smart contracts distribute funds directly to the community members.',
-              icon: '💎'
-            }
+            { step: '01', role: 'Community Member', title: 'Field Capture', desc: 'Members upload geofenced, timestamped site data. AI analyzes biometrics for species density.', icon: '📸' },
+            { step: '02', role: 'Scientific NGO', title: 'Verification', desc: 'Third-party auditors cross-reference field data with high-res satellite imagery.', icon: '🕵️' },
+            { step: '03', role: 'Registry Admin', title: 'Registry Mint', desc: 'Administrators perform a final compliance check before minting a unique cryptographic asset.', icon: '🏛️' },
+            { step: '04', role: 'Corporations', title: 'Market Purchase', desc: 'Buyers purchase and "retire" credits. Smart contracts distribute funds directly.', icon: '💎' }
           ].map((item, idx) => (
             <div key={idx} className="relative z-10 flex flex-col items-center text-center p-8 group">
               <div className="w-16 h-16 bg-white border border-slate-200 rounded-3xl flex items-center justify-center text-3xl shadow-lg mb-8 transition-all group-hover:shadow-sky-500/10 group-hover:-translate-y-2 group-hover:border-sky-500/30">

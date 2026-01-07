@@ -1,15 +1,14 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
-import { UserRole, Submission, User, SubmissionStatus, CreditRecord } from './types';
-import LandingPage from './pages/LandingPage';
-import FishermanDashboard from './pages/FishermanDashboard';
-import NGODashboard from './pages/NGODashboard';
-import AdminDashboard from './pages/AdminDashboard';
-import CorporateDashboard from './pages/CorporateDashboard';
-import Navbar from './components/Navbar';
-import AuthModal from './components/AuthModal';
-import { supabase } from './services/supabaseClient';
-import { MOCK_USERS } from './constants';
+import { UserRole, Submission, User, SubmissionStatus, CreditRecord } from './types.ts';
+import LandingPage from './pages/LandingPage.tsx';
+import FishermanDashboard from './pages/FishermanDashboard.tsx';
+import NGODashboard from './pages/NGODashboard.tsx';
+import AdminDashboard from './pages/AdminDashboard.tsx';
+import CorporateDashboard from './pages/CorporateDashboard.tsx';
+import Navbar from './components/Navbar.tsx';
+import AuthModal from './components/AuthModal.tsx';
+import { supabase } from './services/supabaseClient.ts';
+import { MOCK_USERS } from './constants.tsx';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);

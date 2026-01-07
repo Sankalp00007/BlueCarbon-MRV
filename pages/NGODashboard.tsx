@@ -1,15 +1,15 @@
 
 import React, { useState, useMemo } from 'react';
-import { User, Submission, SubmissionStatus, AuditLog } from '../types';
-import { askAuditorQuestion } from '../services/geminiService';
+import { User, Submission, SubmissionStatus, AuditLog } from '../types.ts';
+import { askAuditorQuestion } from '../services/geminiService.ts';
+
+type DashboardPage = 'PENDING_QUEUE' | 'VERIFIER_HISTORY';
 
 interface NGODashboardProps {
   user: User;
   submissions: Submission[];
   onUpdateStatus: (id: string, updates: Partial<Submission>) => void;
 }
-
-type DashboardPage = 'PENDING_QUEUE' | 'VERIFIER_HISTORY';
 
 const NGODashboard: React.FC<NGODashboardProps> = ({ user, submissions, onUpdateStatus }) => {
   const [activePage, setActivePage] = useState<DashboardPage>('PENDING_QUEUE');
@@ -270,6 +270,7 @@ const NGODashboard: React.FC<NGODashboardProps> = ({ user, submissions, onUpdate
                         <iframe 
                           title="Satellite Grounding"
                           width="100%" height="100%" frameBorder="0" 
+                          // Fixed: Access process.env.GOOGLE_MAPS_API_KEY directly instead of via window object.
                           src={`https://www.google.com/maps/embed/v1/view?key=${process.env.GOOGLE_MAPS_API_KEY}&center=${selectedSub.location.lat},${selectedSub.location.lng}&zoom=19&maptype=satellite`}
                         ></iframe>
                       </div>

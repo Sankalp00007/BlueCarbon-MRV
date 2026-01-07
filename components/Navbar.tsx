@@ -1,7 +1,6 @@
-
 import React from 'react';
-import { User } from '../types';
-import { ICONS } from '../constants';
+import { User } from '../types.ts';
+import { ICONS } from '../constants.tsx';
 
 interface NavbarProps {
   user: User | null;
@@ -12,53 +11,62 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ user, onLogout, onLoginClick, onGoHome }) => {
   return (
-    <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
+    <nav className="bg-white/80 backdrop-blur-xl border-b border-slate-200/50 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="flex justify-between h-20 items-center">
           <div 
-            className="flex items-center space-x-3 cursor-pointer group" 
+            className="flex items-center space-x-4 cursor-pointer group" 
             onClick={(e) => {
               e.preventDefault();
               onGoHome();
             }}
           >
-            <div className="w-10 h-10 bg-sky-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-sky-500/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 ease-out">
+            <div className="w-12 h-12 bg-gradient-to-br from-sky-500 to-sky-700 rounded-[1rem] flex items-center justify-center text-white shadow-xl shadow-sky-500/30 group-hover:scale-105 group-hover:rotate-2 transition-all duration-500 ease-out">
               <ICONS.Logo />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-black tracking-tight text-slate-900 group-hover:text-sky-600 transition-colors leading-none">
+              <span className="text-xl font-black tracking-tight text-slate-900 leading-none">
                 BlueCarbon
               </span>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 group-hover:text-sky-400 transition-colors">
-                Ledger
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-sky-600/60 mt-0.5">
+                Protocol Ledger
               </span>
             </div>
           </div>
 
-          <div className="flex items-center space-x-4 lg:space-x-8">
+          <div className="flex items-center space-x-6 lg:space-x-10">
             {user ? (
-              <div className="flex items-center space-x-4">
-                <div className="hidden sm:flex flex-col text-right">
+              <div className="flex items-center space-x-5">
+                <div className="hidden md:flex flex-col text-right">
                   <span className="text-sm font-bold text-slate-900">{user.name}</span>
-                  <span className="text-[10px] text-slate-500 font-black px-2 py-0.5 bg-slate-100 rounded-full w-fit ml-auto uppercase tracking-tighter">
-                    {user.role}
-                  </span>
+                  <div className="flex items-center justify-end space-x-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <span className="text-[9px] text-slate-400 font-black uppercase tracking-widest">
+                      {user.role} Verified
+                    </span>
+                  </div>
                 </div>
-                <div className="h-8 w-px bg-slate-100 mx-2 hidden sm:block"></div>
+                <div className="h-10 w-px bg-slate-200 hidden md:block"></div>
                 <button 
                   onClick={onLogout}
-                  className="text-slate-400 hover:text-red-500 font-black transition-colors text-[10px] uppercase tracking-widest px-2 py-1"
+                  className="bg-slate-50 text-slate-400 hover:text-red-500 hover:bg-red-50 p-2.5 rounded-xl transition-all duration-300 active:scale-90"
+                  title="Logout"
                 >
-                  Sign Out
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
                 </button>
               </div>
             ) : (
-              <button 
-                onClick={onLoginClick}
-                className="bg-slate-900 text-white px-8 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-sky-600 transition-all shadow-xl shadow-slate-900/10 active:scale-95"
-              >
-                Log In
-              </button>
+              <div className="flex items-center space-x-4">
+                <button className="hidden sm:block text-slate-500 font-bold uppercase tracking-widest text-[10px] hover:text-sky-600 transition-colors">Registry Docs</button>
+                <button 
+                  onClick={onLoginClick}
+                  className="bg-slate-900 text-white px-10 py-3 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-sky-600 hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-500 active:scale-95"
+                >
+                  Access Portal
+                </button>
+              </div>
             )}
           </div>
         </div>

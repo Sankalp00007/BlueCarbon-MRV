@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
-import { UserRole, User } from '../types';
-import { MOCK_USERS } from '../constants';
+import { UserRole, User } from '../types.ts';
+import { MOCK_USERS } from '../constants.tsx';
 
 interface AuthModalProps {
   onClose: () => void;

@@ -1,6 +1,5 @@
-
 import React, { useState, useMemo } from 'react';
-import { Submission, CreditRecord, SubmissionStatus, User, UserRole, AuditLog } from '../types';
+import { Submission, CreditRecord, SubmissionStatus, User, UserRole, AuditLog } from '../types.ts';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface AdminDashboardProps {
