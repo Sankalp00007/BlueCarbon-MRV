@@ -93,7 +93,6 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
     const q = aiQuestion;
     setAiQuestion('');
     try {
-      // Correctly extract pure base64 without data URI prefix for the AI Service
       const base64Data = inspectedSub.imageUrl.includes(',') 
         ? inspectedSub.imageUrl.split(',')[1] 
         : inspectedSub.imageUrl;
@@ -126,7 +125,7 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span className="text-[10px] font-black text-emerald-700 uppercase tracking-[0.2em]">Live Field Monitoring</span>
           </div>
-          <h1 className="text-5xl font-extrabold tracking-tight text-slate-900">Member <span className="text-sky-600">Portal</span></h1>
+          <h1 className="text-5xl font-extrabold tracking-tight text-slate-900 text-slate-900">Member <span className="text-sky-600">Portal</span></h1>
           <p className="text-slate-500 font-light text-xl leading-relaxed max-w-2xl">
             Community-driven ecosystem verification tools. Capture site evidence to mint high-integrity Blue Carbon credits.
           </p>
@@ -160,7 +159,7 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
            <div className="flex items-center space-x-6">
              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-2xl">🧬</div>
              <div>
-               <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-50 mb-1">AI Verification Engine</p>
+               <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-50 mb-1 text-sky-200">AI Verification Engine</p>
                <h4 className="text-xl font-bold tracking-tight">{uploadStatus}</h4>
              </div>
            </div>
@@ -210,7 +209,7 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
             </div>
             <div className="relative z-10 space-y-10">
               <div>
-                <div className="text-emerald-200 text-[10px] font-black uppercase tracking-[0.3em] mb-2">Aggregate Impact</div>
+                <div className="text-emerald-200 text-[10px] font-black uppercase tracking-[0.3em] mb-2 opacity-70">Aggregate Impact</div>
                 <div className="text-6xl font-extrabold tracking-tighter mb-2">{(submissions.filter(s => s.status === SubmissionStatus.APPROVED).reduce((acc, s) => acc + s.creditsGenerated, 0)).toFixed(1)}</div>
                 <div className="text-emerald-200 text-sm font-bold uppercase tracking-widest opacity-80">Tonnes CO2e</div>
               </div>
@@ -230,7 +229,7 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
                 <div className="text-3xl font-black text-slate-900">{submissions.length}</div>
              </div>
              <div className="flex justify-between items-center">
-                <div className="text-slate-400 text-[10px) font-black uppercase tracking-[0.2em]">Rewards Earned</div>
+                <div className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">Rewards Earned</div>
                 <div className="text-3xl font-black text-emerald-600">${(submissions.filter(s => s.status === SubmissionStatus.APPROVED).length * 45).toFixed(2)}</div>
              </div>
           </div>
@@ -296,7 +295,7 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
                     <td className="px-10 py-8 text-right">
                        <button 
                         onClick={(e) => {
-                          e.stopPropagation(); // Prevent row selection
+                          e.stopPropagation(); // CRITICAL: Stop propagation to row select
                           setInspectedSub(s);
                           setChatLog([]);
                         }}
