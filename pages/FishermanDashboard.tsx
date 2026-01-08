@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { User, Submission, SubmissionStatus } from '../types.ts';
 import { verifyRestorationImage, askAuditorQuestion } from '../services/geminiService.ts';
@@ -17,7 +16,6 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
   const [focusedSubmissionId, setFocusedSubmissionId] = useState<string | null>(null);
   const [inspectedSub, setInspectedSub] = useState<Submission | null>(null);
   
-  // AI Interrogation State for Inspector
   const [aiQuestion, setAiQuestion] = useState('');
   const [isAiProcessing, setIsAiProcessing] = useState(false);
   const [chatLog, setChatLog] = useState<{q: string, a: string}[]>([]);
@@ -49,37 +47,42 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
         return;
       }
 
-      const aiResult = await verifyRestorationImage(base64Data, selectedType, mockLocation.lat, mockLocation.lng);
-      
-      const newSubmission: Submission = {
-        id: `sub-${Date.now()}`,
-        userId: user.id,
-        userName: user.name,
-        timestamp: new Date().toISOString(),
-        location: mockLocation,
-        region: Math.random() > 0.5 ? 'North Coast Basin' : 'Eastern Mangrove Delta',
-        imageUrl: base64Content,
-        type: selectedType,
-        status: aiResult.confidence > 0.7 ? SubmissionStatus.AI_VERIFIED : SubmissionStatus.PENDING,
-        aiScore: aiResult.confidence,
-        aiReasoning: aiResult.reasoning,
-        detectedFeatures: aiResult.detectedFeatures || [],
-        environmentalContext: aiResult.environmentalContext || "Coastal",
-        googleMapsUrl: aiResult.googleMapsUrl,
-        creditsGenerated: selectedType === 'MANGROVE' ? 1.5 : 0.8,
-        blockchainHash: Math.random().toString(36).substring(2, 15),
-        auditTrail: [{
+      try {
+        const aiResult = await verifyRestorationImage(base64Data, selectedType, mockLocation.lat, mockLocation.lng);
+        
+        const newSubmission: Submission = {
+          id: `sub-${Date.now()}`,
+          userId: user.id,
+          userName: user.name,
           timestamp: new Date().toISOString(),
-          action: 'Submission Created',
-          user: user.name,
-          note: `Field data uploaded via mobile terminal.`
-        }]
-      };
+          location: mockLocation,
+          region: Math.random() > 0.5 ? 'North Coast Basin' : 'Eastern Mangrove Delta',
+          imageUrl: base64Content,
+          type: selectedType,
+          status: aiResult.confidence > 0.7 ? SubmissionStatus.AI_VERIFIED : SubmissionStatus.PENDING,
+          aiScore: aiResult.confidence,
+          aiReasoning: aiResult.reasoning,
+          detectedFeatures: aiResult.detectedFeatures || [],
+          environmentalContext: aiResult.environmentalContext || "Coastal",
+          googleMapsUrl: aiResult.googleMapsUrl,
+          creditsGenerated: selectedType === 'MANGROVE' ? 1.5 : 0.8,
+          blockchainHash: Math.random().toString(36).substring(2, 15),
+          auditTrail: [{
+            timestamp: new Date().toISOString(),
+            action: 'Submission Created',
+            user: user.name,
+            note: `Field data uploaded via mobile terminal.`
+          }]
+        };
 
-      onAddSubmission(newSubmission);
-      setIsUploading(false);
-      setUploadStatus('');
-      setFocusedSubmissionId(newSubmission.id);
+        onAddSubmission(newSubmission);
+      } catch (err) {
+        console.error("Upload process error:", err);
+      } finally {
+        setIsUploading(false);
+        setUploadStatus('');
+        setFocusedSubmissionId(`sub-${Date.now()}`); // approximate since we don't have return from onAddSubmission
+      }
     };
     reader.readAsDataURL(file);
   };
@@ -90,7 +93,11 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
     const q = aiQuestion;
     setAiQuestion('');
     try {
-      const base64Data = inspectedSub.imageUrl.split(',')[1];
+      // Correctly extract base64 data from the data URI stored in the submission
+      const base64Data = inspectedSub.imageUrl.includes(',') 
+        ? inspectedSub.imageUrl.split(',')[1] 
+        : inspectedSub.imageUrl;
+        
       const answer = await askAuditorQuestion(base64Data, q);
       setChatLog(prev => [...prev, { q, a: answer || "Analysis complete." }]);
     } catch (e) {
@@ -265,7 +272,7 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
                         </div>
                         <div>
                           <div className="font-black text-slate-900 text-xs uppercase tracking-widest">{s.type} Collection</div>
-                          <div className="text-[10px] text-slate-400 font-mono mt-1 opacity-60">Hash: {s.blockchainHash.slice(0, 10)}...</div>
+                          <div className="text-[10px] text-slate-400 font-mono mt-1 opacity-60">Hash: {s.blockchainHash?.slice(0, 10)}...</div>
                         </div>
                       </div>
                     </td>
