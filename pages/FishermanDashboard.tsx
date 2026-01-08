@@ -1,8 +1,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { User, Submission, SubmissionStatus } from '../types.ts';
-import { verifyRestorationImage } from '../services/geminiService.ts';
-// Add missing import for ICONS
+import { verifyRestorationImage, askAuditorQuestion } from '../services/geminiService.ts';
 import { ICONS } from '../constants.tsx';
 
 interface FishermanDashboardProps {
@@ -17,6 +16,11 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
   const [selectedType, setSelectedType] = useState<'MANGROVE' | 'SEAGRASS'>('MANGROVE');
   const [focusedSubmissionId, setFocusedSubmissionId] = useState<string | null>(null);
   const [inspectedSub, setInspectedSub] = useState<Submission | null>(null);
+  
+  // AI Interrogation State for Inspector
+  const [aiQuestion, setAiQuestion] = useState('');
+  const [isAiProcessing, setIsAiProcessing] = useState(false);
+  const [chatLog, setChatLog] = useState<{q: string, a: string}[]>([]);
 
   const focusedSub = useMemo(() => 
     submissions.find(s => s.id === focusedSubmissionId) || submissions[0] || null, 
@@ -78,6 +82,22 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
       setFocusedSubmissionId(newSubmission.id);
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleAiAsk = async () => {
+    if (!aiQuestion || !inspectedSub) return;
+    setIsAiProcessing(true);
+    const q = aiQuestion;
+    setAiQuestion('');
+    try {
+      const base64Data = inspectedSub.imageUrl.split(',')[1];
+      const answer = await askAuditorQuestion(base64Data, q);
+      setChatLog(prev => [...prev, { q, a: answer || "Analysis complete." }]);
+    } catch (e) {
+      setChatLog(prev => [...prev, { q, a: "The AI Oracle is currently processing high volumes of ecological data. Please try again." }]);
+    } finally {
+      setIsAiProcessing(false);
+    }
   };
 
   const ImageWithFallback = ({ src, className, alt }: { src: string, className?: string, alt?: string }) => (
@@ -271,6 +291,7 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
                         onClick={(e) => {
                           e.stopPropagation();
                           setInspectedSub(s);
+                          setChatLog([]);
                         }}
                         className="bg-white border border-slate-200 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-sky-600 hover:border-sky-500 hover:shadow-xl hover:shadow-sky-500/10 transition-all active:scale-95"
                        >
@@ -284,6 +305,130 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
           </table>
         </div>
       </div>
+
+      {/* SCIENTIFIC INSPECTION OVERLAY */}
+      {inspectedSub && (
+        <div className="fixed inset-0 z-[100] bg-slate-900/95 backdrop-blur-md flex items-center justify-center p-0 lg:p-10 animate-in fade-in duration-300">
+          <div className="bg-white w-full h-full max-w-7xl lg:h-auto lg:max-h-[95vh] lg:rounded-[3rem] shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-300">
+            <header className="bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between shrink-0">
+               <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center text-sky-600 font-bold text-xl">🔬</div>
+                  <div>
+                    <h2 className="text-lg font-black text-slate-900 uppercase tracking-tight">Ecosystem Dossier</h2>
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Biometric Evidence #{inspectedSub.id.slice(-8)}</p>
+                  </div>
+               </div>
+               <button onClick={() => setInspectedSub(null)} className="group flex items-center space-x-3 text-slate-400 hover:text-red-500 transition-colors bg-slate-50 hover:bg-red-50 px-4 py-2 rounded-xl">
+                  <span className="text-[10px] font-black uppercase tracking-widest">Close Dossier</span>
+                  <span className="font-bold">✕</span>
+               </button>
+            </header>
+
+            <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden">
+               <div className="flex-1 min-h-0 overflow-y-auto p-6 lg:p-8 custom-scrollbar space-y-8 bg-white">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-6 border-b border-slate-50">
+                     <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                       <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Impact Potential</p>
+                       <p className="text-xl font-black text-sky-600">{inspectedSub.creditsGenerated} <span className="text-[10px] font-normal text-slate-400 italic">tCO2e</span></p>
+                     </div>
+                     <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                       <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Eco-System</p>
+                       <p className="text-xs font-black text-slate-800 uppercase">{inspectedSub.type}</p>
+                     </div>
+                     <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                       <p className="text-[8px] font-black text-slate-400 uppercase mb-1">AI Confidence</p>
+                       <p className="text-xs font-black text-emerald-600 uppercase">{(inspectedSub.aiScore * 100).toFixed(0)}% Match</p>
+                     </div>
+                     <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                       <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Region</p>
+                       <p className="text-xs font-black text-slate-800 uppercase truncate">{inspectedSub.region}</p>
+                     </div>
+                  </div>
+
+                  <div className="grid lg:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <h5 className="text-[9px] font-black text-slate-500 uppercase tracking-widest flex items-center">
+                        <span className="w-1.5 h-1.5 bg-sky-500 rounded-full mr-2"></span>
+                        On-Site Field Capture
+                      </h5>
+                      <div className="relative aspect-video rounded-3xl overflow-hidden border-2 border-slate-50 shadow-md">
+                        <ImageWithFallback src={inspectedSub.imageUrl} className="w-full h-full object-cover" alt="site evidence" />
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <h5 className="text-[9px] font-black text-slate-500 uppercase tracking-widest flex items-center">
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2"></span>
+                        Registry Spatial Map
+                      </h5>
+                      <div className="relative aspect-video rounded-3xl overflow-hidden border-2 border-slate-50 shadow-md">
+                        <iframe 
+                          title="Satellite Grounding"
+                          width="100%" height="100%" frameBorder="0" 
+                          src={`https://www.google.com/maps/embed/v1/view?key=${process.env.GOOGLE_MAPS_API_KEY}&center=${inspectedSub.location.lat},${inspectedSub.location.lng}&zoom=19&maptype=satellite`}
+                        ></iframe>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h5 className="text-[9px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">AI Diagnostic Reasoning</h5>
+                    <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100">
+                      <p className="text-[11px] leading-relaxed text-slate-600 font-medium italic">"{inspectedSub.aiReasoning}"</p>
+                      <div className="flex flex-wrap gap-2 mt-6">
+                        {inspectedSub.detectedFeatures.map((f, i) => (
+                          <span key={i} className="px-3 py-1 bg-white border border-slate-200 rounded-full text-[8px] font-black text-slate-400 uppercase tracking-widest">{f}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+               </div>
+
+               <div className="w-full lg:w-[400px] shrink-0 flex flex-col min-h-0 bg-slate-50 border-l border-slate-100">
+                  <div className="flex-1 flex flex-col min-h-0 p-6 overflow-hidden">
+                     <div className="flex items-center justify-between mb-4 shrink-0">
+                       <h5 className="text-[10px] font-black text-slate-600 uppercase tracking-widest flex items-center">
+                         <span className="w-2 h-2 bg-sky-500 rounded-full mr-2 animate-pulse"></span>
+                         Ecological AI Oracle
+                       </h5>
+                       <span className="text-[7px] font-black text-slate-400 uppercase bg-white px-1.5 py-0.5 rounded">G-3-F</span>
+                     </div>
+
+                     <div className="flex-1 min-h-0 overflow-y-auto space-y-4 mb-4 custom-scrollbar pr-1">
+                       <div className="bg-sky-600 p-4 rounded-2xl rounded-tl-lg text-[10px] font-bold text-white shadow-lg shadow-sky-500/10">
+                         Welcome. I have analyzed your field data. Ask me about the species health, sediment carbon indicators, or pixel verification results.
+                       </div>
+                       {chatLog.map((log, i) => (
+                         <div key={i} className="space-y-2 animate-in slide-in-from-bottom-1">
+                           <div className="ml-auto bg-white p-3 rounded-2xl rounded-tr-lg text-[9px] font-black text-slate-700 max-w-[85%] text-right border border-slate-200/50">{log.q}</div>
+                           <div className="bg-emerald-50 p-3 rounded-2xl rounded-tl-lg text-[10px] font-medium text-emerald-900 max-w-[95%] border-l-2 border-l-emerald-500 shadow-sm">{log.a}</div>
+                         </div>
+                       ))}
+                       {isAiProcessing && <div className="p-2 flex space-x-1.5 items-center"><div className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce"></div><div className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce delay-75"></div><span className="text-[8px] text-slate-400 uppercase font-black">Scanning Pixels...</span></div>}
+                     </div>
+
+                     <div className="relative shrink-0 mt-auto">
+                       <input 
+                         type="text" value={aiQuestion} onChange={e => setAiQuestion(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAiAsk()}
+                         placeholder="Ask the auditor..."
+                         className="w-full bg-white border border-slate-200 rounded-xl py-3 px-4 text-xs font-bold outline-none pr-12 shadow-sm focus:ring-2 focus:ring-sky-500/10 transition-all"
+                       />
+                       <button onClick={handleAiAsk} className="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 bg-sky-600 text-white rounded-lg flex items-center justify-center hover:bg-sky-700 transition-colors">
+                         →
+                       </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 20px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+      `}</style>
     </div>
   );
 };
