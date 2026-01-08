@@ -14,15 +14,12 @@ export default defineConfig({
     }
   },
   server: {
-    host: '0.0.0.0',
-    port: Number(process.env.PORT) || 3000
-  },
-  preview: {
-    host: '0.0.0.0',
-    port: Number(process.env.PORT) || 3000,
-    allowedHosts: true // Ensures Render's health checks can reach the service
+    port: 3000,
+    open: true
   },
   build: {
-    outDir: 'dist'
+    outDir: 'dist',
+    emptyOutDir: true,
+    sourcemap: true
   }
 });
