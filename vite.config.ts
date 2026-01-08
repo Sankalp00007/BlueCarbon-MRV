@@ -18,7 +18,8 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       emptyOutDir: true,
-      sourcemap: true
+      sourcemap: false,
+      minify: 'esbuild'
     }
   };
 });
