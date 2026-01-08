@@ -7,18 +7,21 @@
     "node": "20"
   },
   "scripts": {
-    "start": "npx serve .",
-    "build": "esbuild index.tsx --bundle --outfile=index.js --format=esm --jsx=automatic --loader:.tsx=tsx --loader:.ts=ts --platform=browser --external:react --external:react-dom --external:react-dom/client --external:recharts --external:@google/genai --external:@supabase/supabase-js"
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "recharts": "2.15.0",
     "@google/genai": "0.2.0",
-    "@supabase/supabase-js": "2.47.10",
-    "esbuild": "0.24.0"
+    "@supabase/supabase-js": "2.47.10"
   },
   "devDependencies": {
-    "serve": "14.2.4"
+    "@vitejs/plugin-react": "4.3.4",
+    "vite": "6.0.7",
+    "typescript": "5.7.2"
   }
 }
