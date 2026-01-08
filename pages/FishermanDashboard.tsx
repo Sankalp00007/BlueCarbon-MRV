@@ -93,6 +93,7 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
     const q = aiQuestion;
     setAiQuestion('');
     try {
+      // Correctly extract pure base64 without data URI prefix for the AI Service
       const base64Data = inspectedSub.imageUrl.includes(',') 
         ? inspectedSub.imageUrl.split(',')[1] 
         : inspectedSub.imageUrl;
@@ -229,7 +230,7 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
                 <div className="text-3xl font-black text-slate-900">{submissions.length}</div>
              </div>
              <div className="flex justify-between items-center">
-                <div className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">Rewards Earned</div>
+                <div className="text-slate-400 text-[10px) font-black uppercase tracking-[0.2em]">Rewards Earned</div>
                 <div className="text-3xl font-black text-emerald-600">${(submissions.filter(s => s.status === SubmissionStatus.APPROVED).length * 45).toFixed(2)}</div>
              </div>
           </div>
@@ -295,7 +296,7 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
                     <td className="px-10 py-8 text-right">
                        <button 
                         onClick={(e) => {
-                          e.stopPropagation();
+                          e.stopPropagation(); // Prevent row selection
                           setInspectedSub(s);
                           setChatLog([]);
                         }}
@@ -320,7 +321,7 @@ const FishermanDashboard: React.FC<FishermanDashboardProps> = ({ user, submissio
                <div className="flex items-center space-x-4">
                   <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center text-sky-600 font-bold text-xl">🔬</div>
                   <div>
-                    <h2 className="text-lg font-black text-slate-900 uppercase tracking-tight">Ecosystem Dossier</h2>
+                    <h2 className="text-lg font-black text-slate-900 uppercase tracking-tight text-slate-900">Ecosystem Dossier</h2>
                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Biometric Evidence #{inspectedSub.id.slice(-8)}</p>
                   </div>
                </div>
