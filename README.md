@@ -19,6 +19,7 @@ View your app in AI Studio: https://ai.studio/apps/drive/1VPKahcJ0J-m5j3roDV7WUz
 3. Run the app:
    `npm run dev`
 
+
    🌿 Blue Carbon MRV System
 
 A full-stack digital platform for verifying mangrove & seagrass restoration using AI image analysis, geo-tagging, multi-role verification, and a transparent carbon credit registry.
