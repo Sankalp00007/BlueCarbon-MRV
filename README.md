@@ -103,3 +103,39 @@ Immutable credit registry simulation
 Secure JWT authentication
 
 Cloud-based storage for images
+
+🚧 Challenges Faced
+
+Ensuring AI accuracy for diverse vegetation images
+
+Handling GPS validation in low-signal coastal areas
+
+Designing multi-role workflows
+
+Creating believable carbon credit simulation
+
+Time constraints and rapid prototyping
+
+🌍 Future Enhancements
+
+Real blockchain deployment (Polygon)
+
+Custom AI model trained on mangrove/seagrass datasets
+
+Drone & satellite NDVI integration
+
+Mobile offline-first app for field workers
+
+Real payment gateway for credit purchases
+
+Community-powered restoration leaderboard
+
+✨ Why This Project Matters
+
+Empowers fishermen & coastal communities
+
+Supports climate action and India’s Net Zero goals
+
+Makes carbon credits trustworthy and traceable
+
+Bridges technology, sustainability, and real impact
