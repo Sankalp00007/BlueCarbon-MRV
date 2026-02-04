@@ -44,3 +44,62 @@ Allows corporates to view & purchase credits
 Provides income opportunities for coastal communities
 
 Built for hackathons, academic evaluation, and real-world pilot testing.
+
+🧠 Key Features
+🌱 Fisherman / Community User
+
+Upload mangrove & seagrass images
+
+Automatic GPS + timestamp detection
+
+Track AI verification & NGO/Admin approval
+
+View estimated carbon contribution & earnings (mock)
+
+🧑‍💼 NGO Verifier
+
+View pending submissions
+
+See AI vegetation detection score
+
+Map preview for geo-validation
+
+Approve / reject with comments
+
+Override AI (with justification)
+
+🏛 Admin (Government / Authority)
+
+System-wide analytics dashboard
+
+Final approval & audit trail
+
+Manage NGOs and permissions
+
+Monitor carbon credit issuance
+
+Export CSV/PDF reports (mock)
+
+🏢 Corporate Buyer
+
+Browse verified carbon credit projects
+
+Filter by region, mangrove/seagrass
+
+Purchase credits (mock)
+
+Download ESG impact summary
+
+🤖 AI & Tech Features
+
+Image verification via Gemini API
+
+Multi-language support
+
+Google Maps integration
+
+Immutable credit registry simulation
+
+Secure JWT authentication
+
+Cloud-based storage for images
