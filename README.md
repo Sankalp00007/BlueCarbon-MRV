@@ -104,6 +104,14 @@ Secure JWT authentication
 
 Cloud-based storage for images
 
+🔧 Tech Stack
+Layer	Technologies
+Frontend:	React.js, Typescript.js, HTML CSS Js
+Backend: Node.js
+Database:	PostgreSQL , Supabase
+AI Layer:	Gemini API (Vision + Text)
+Maps:	Google Maps API
+
 🚧 Challenges Faced
 
 Ensuring AI accuracy for diverse vegetation images
